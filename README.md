@@ -18,6 +18,8 @@ Or from a local path:
 gem 'mcp_client', path: '../gems/mcp_client'
 ```
 
+Then `bundle install`.
+
 ## Usage
 
 ### HTTP Transport
@@ -37,6 +39,10 @@ client.call_tool("html_to_markdown", { url: "https://example.com" })
 # Call a tool (returns joined text)
 client.tool_text("html_to_markdown", { url: "https://example.com" })
 # => "# Example\n..."
+
+# Find a specific tool
+client.find_tool("html_to_markdown")
+# => { "name" => "html_to_markdown", "description" => "...", "inputSchema" => {...} }
 
 client.disconnect!
 ```
@@ -63,6 +69,12 @@ client = McpClient.http("https://mcp.example.com/api", headers: {
 })
 ```
 
+### Custom Client Name
+
+```ruby
+client = McpClient.http("http://localhost:3001/mcp", client_name: "my_app", client_version: "2.0.0")
+```
+
 ### Resources
 
 ```ruby
@@ -80,29 +92,60 @@ client.list_prompts
 client.get_prompt("summarize", { text: "Long article content..." })
 ```
 
-### Finding a Tool
-
-```ruby
-tool = client.find_tool("html_to_markdown")
-# => { "name" => "html_to_markdown", "description" => "...", "inputSchema" => {...} }
-```
-
 ## Error Handling
+
+All errors inherit from `McpClient::Error`:
 
 ```ruby
 begin
   client.connect!
   client.call_tool("some_tool", { arg: "value" })
 rescue McpClient::ConnectionError => e
-  # Server unreachable or process terminated
+  # Server unreachable, HTTP error, or process terminated
 rescue McpClient::ProtocolError => e
-  # JSON-RPC error from server
+  # JSON-RPC error or invalid response from server
 rescue McpClient::ToolError => e
-  # Tool returned an error result
+  # Tool executed but returned an error result
 rescue McpClient::NotConnectedError => e
-  # Forgot to call connect!
+  # connect! was not called before making requests
 end
 ```
+
+## API Reference
+
+### Factory Methods
+
+| Method | Description |
+|---|---|
+| `McpClient.http(url, headers: {}, **opts)` | Create a client with HTTP transport |
+| `McpClient.stdio(command, args: [], **opts)` | Create a client with stdio transport |
+
+### Client Methods
+
+| Method | Description |
+|---|---|
+| `connect!` | Perform the MCP initialize handshake |
+| `disconnect!` | Close the transport connection |
+| `connected?` | Check connection status |
+| `list_tools` | List available tools (cached) |
+| `call_tool(name, arguments)` | Call a tool, returns content array |
+| `tool_text(name, arguments)` | Call a tool, returns joined text |
+| `find_tool(name)` | Find a tool definition by name |
+| `list_resources` | List available resources |
+| `read_resource(uri)` | Read a resource by URI |
+| `list_prompts` | List available prompts |
+| `get_prompt(name, arguments)` | Get a prompt by name |
+| `server_info` | Server info from the handshake |
+| `capabilities` | Server capabilities from the handshake |
+
+## Testing
+
+```
+bundle install
+bundle exec rspec
+```
+
+48 specs covering client lifecycle, tool/resource/prompt operations, HTTP transport (including SSE and session management), stdio transport, and error handling.
 
 ## Protocol
 
