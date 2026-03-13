@@ -96,6 +96,28 @@ result = client.tool_text("html_to_markdown", {
 client.disconnect!
 ```
 
+#### html_to_markdown Tool Options
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `url` | string | **required** | URL to convert |
+| `include_images` | boolean | `true` | Include images in output |
+| `include_tables` | boolean | `true` | Include tables in output |
+| `include_links` | boolean | `true` | Include links in output |
+| `timeout` | integer | `30` | Request timeout in seconds (5-120) |
+| `max_size` | integer | `10485760` | Max download size in bytes (1MB-50MB) |
+| `use_cache` | boolean | `false` | Cache the result |
+| `cache_ttl` | integer | `3600` | Cache TTL in seconds (60-86400) |
+| `fetch_method` | string | `"fetch"` | `"fetch"` (fast) or `"playwright"` (JS-rendered) |
+| `browser_type` | string | `"chromium"` | `"chromium"`, `"firefox"`, or `"webkit"` |
+| `headless` | boolean | `true` | Run browser headless |
+| `wait_for` | string | `"networkidle"` | `"load"`, `"domcontentloaded"`, or `"networkidle"` |
+| `use_user_profile` | boolean | `false` | Use browser profile with cookies |
+| `return_summary` | boolean | `false` | Return summary instead of full content (for large docs) |
+| `max_tokens` | integer | `25000` | Auto-return summary above this token count (1K-100K) |
+| `section_id` | string | — | Extract only a section by HTML anchor ID |
+| `section_heading` | string | — | Extract only a section by heading text |
+
 ### Custom Headers (HTTP)
 
 ```ruby
