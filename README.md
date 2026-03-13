@@ -61,6 +61,22 @@ client.call_tool("read_file", { path: "/tmp/example.txt" })
 client.disconnect!
 ```
 
+### Docker Transport (Stdio)
+
+Spawn an MCP server inside a Docker container and communicate via stdin/stdout.
+
+```ruby
+client = McpClient.stdio("docker", args: ["run", "--rm", "-i", "html2md", "python", "-m", "html2md.server"])
+client.connect!
+
+client.tool_text("html_to_markdown", { url: "https://example.com" })
+# => "# Conversion Successful\n..."
+
+client.disconnect!
+```
+
+This creates a fresh container per connection. The `--rm` flag ensures the container is cleaned up when the session ends. The `-i` flag keeps stdin open, which is required for stdio transport.
+
 ### Custom Headers (HTTP)
 
 ```ruby
