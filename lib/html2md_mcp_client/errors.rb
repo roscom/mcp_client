@@ -1,4 +1,4 @@
-module McpClient
+module Html2mdMcpClient
   class Error < StandardError; end
   class ConnectionError < Error; end
   class ProtocolError < Error; end

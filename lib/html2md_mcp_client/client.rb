@@ -1,14 +1,14 @@
 require 'json'
 require 'securerandom'
 
-module McpClient
+module Html2mdMcpClient
   class Client
     JSONRPC_VERSION = '2.0'.freeze
     PROTOCOL_VERSION = '2025-03-26'.freeze
 
     attr_reader :transport, :server_info, :capabilities
 
-    def initialize(transport, client_name: 'mcp_client', client_version: McpClient::VERSION)
+    def initialize(transport, client_name: 'html2md_mcp_client', client_version: Html2mdMcpClient::VERSION)
       @transport = transport
       @client_name = client_name
       @client_version = client_version

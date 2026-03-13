@@ -1,7 +1,7 @@
 require 'open3'
 require 'json'
 
-module McpClient
+module Html2mdMcpClient
   module Transport
     class Stdio
       def initialize(command, args: [])

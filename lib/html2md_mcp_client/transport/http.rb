@@ -1,7 +1,7 @@
 require 'net/http'
 require 'json'
 
-module McpClient
+module Html2mdMcpClient
   module Transport
     class Http
       attr_reader :session_id

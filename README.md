@@ -1,4 +1,4 @@
-# MCP Client
+# Html2md MCP Client
 
 Ruby client for the [Model Context Protocol](https://modelcontextprotocol.io) (MCP). Connects to MCP servers over HTTP or stdio. Supports tools, resources, and prompts.
 
@@ -9,13 +9,13 @@ Requires Ruby 2.5+. No external dependencies.
 Add to your Gemfile:
 
 ```ruby
-gem 'mcp_client', github: 'roscom/mcp_client'
+gem 'html2md_mcp_client', github: 'roscom/html2md_mcp_client'
 ```
 
 Or from a local path:
 
 ```ruby
-gem 'mcp_client', path: '../gems/mcp_client'
+gem 'html2md_mcp_client', path: '../gems/html2md_mcp_client'
 ```
 
 Then `bundle install`.
@@ -25,7 +25,7 @@ Then `bundle install`.
 ### HTTP Transport
 
 ```ruby
-client = McpClient.http("http://localhost:3001/mcp")
+client = Html2mdMcpClient.http("http://localhost:3001/mcp")
 client.connect!
 
 # List available tools
@@ -52,7 +52,7 @@ client.disconnect!
 Spawns the MCP server as a subprocess and communicates via stdin/stdout.
 
 ```ruby
-client = McpClient.stdio("npx", args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"])
+client = Html2mdMcpClient.stdio("npx", args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"])
 client.connect!
 
 client.list_tools
@@ -66,7 +66,7 @@ client.disconnect!
 Spawn an MCP server inside a Docker container and communicate via stdin/stdout.
 
 ```ruby
-client = McpClient.stdio("docker", args: ["run", "--rm", "-i", "html2md", "python", "-m", "html2md.server"])
+client = Html2mdMcpClient.stdio("docker", args: ["run", "--rm", "-i", "html2md", "python", "-m", "html2md.server"])
 client.connect!
 
 client.tool_text("html_to_markdown", { url: "https://example.com" })
@@ -82,7 +82,7 @@ This creates a fresh container per connection. The `--rm` flag ensures the conta
 Use `fetch_method: "playwright"` for JavaScript-rendered pages, and pass additional options like `wait_for`, `timeout`, and `include_images`:
 
 ```ruby
-client = McpClient.stdio("docker", args: ["run", "--rm", "-i", "html2md", "python", "-m", "html2md.server"])
+client = Html2mdMcpClient.stdio("docker", args: ["run", "--rm", "-i", "html2md", "python", "-m", "html2md.server"])
 client.connect!
 
 result = client.tool_text("html_to_markdown", {
@@ -121,7 +121,7 @@ client.disconnect!
 ### Custom Headers (HTTP)
 
 ```ruby
-client = McpClient.http("https://mcp.example.com/api", headers: {
+client = Html2mdMcpClient.http("https://mcp.example.com/api", headers: {
   "Authorization" => "Bearer #{token}"
 })
 ```
@@ -129,7 +129,7 @@ client = McpClient.http("https://mcp.example.com/api", headers: {
 ### Custom Client Name
 
 ```ruby
-client = McpClient.http("http://localhost:3001/mcp", client_name: "my_app", client_version: "2.0.0")
+client = Html2mdMcpClient.http("http://localhost:3001/mcp", client_name: "my_app", client_version: "2.0.0")
 ```
 
 ### Resources
@@ -151,19 +151,19 @@ client.get_prompt("summarize", { text: "Long article content..." })
 
 ## Error Handling
 
-All errors inherit from `McpClient::Error`:
+All errors inherit from `Html2mdMcpClient::Error`:
 
 ```ruby
 begin
   client.connect!
   client.call_tool("some_tool", { arg: "value" })
-rescue McpClient::ConnectionError => e
+rescue Html2mdMcpClient::ConnectionError => e
   # Server unreachable, HTTP error, or process terminated
-rescue McpClient::ProtocolError => e
+rescue Html2mdMcpClient::ProtocolError => e
   # JSON-RPC error or invalid response from server
-rescue McpClient::ToolError => e
+rescue Html2mdMcpClient::ToolError => e
   # Tool executed but returned an error result
-rescue McpClient::NotConnectedError => e
+rescue Html2mdMcpClient::NotConnectedError => e
   # connect! was not called before making requests
 end
 ```
@@ -174,8 +174,8 @@ end
 
 | Method | Description |
 |---|---|
-| `McpClient.http(url, headers: {}, **opts)` | Create a client with HTTP transport |
-| `McpClient.stdio(command, args: [], **opts)` | Create a client with stdio transport |
+| `Html2mdMcpClient.http(url, headers: {}, **opts)` | Create a client with HTTP transport |
+| `Html2mdMcpClient.stdio(command, args: [], **opts)` | Create a client with stdio transport |
 
 ### Client Methods
 

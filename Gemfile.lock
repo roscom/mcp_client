@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mcp_client (0.1.0)
+    html2md_mcp_client (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -38,7 +38,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  mcp_client!
+  html2md_mcp_client!
   rspec (~> 3.0)
   webmock (~> 3.0)
 

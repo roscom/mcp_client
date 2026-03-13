@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe McpClient::Client do
+RSpec.describe Html2mdMcpClient::Client do
   let(:transport) { instance_double('Transport') }
-  let(:client) { McpClient::Client.new(transport) }
+  let(:client) { Html2mdMcpClient::Client.new(transport) }
 
   def stub_connect!
     allow(transport).to receive(:send_request)
@@ -20,7 +20,7 @@ RSpec.describe McpClient::Client do
           method: 'initialize',
           params: hash_including(
             protocolVersion: '2025-03-26',
-            clientInfo: hash_including(name: 'mcp_client')
+            clientInfo: hash_including(name: 'html2md_mcp_client')
           )
         ))
         .and_return(jsonrpc_response(1, initialize_result))
@@ -50,7 +50,7 @@ RSpec.describe McpClient::Client do
 
     it 'calls start on transport if it responds to start' do
       transport_with_start = instance_double('StdioTransport', start: nil)
-      c = McpClient::Client.new(transport_with_start)
+      c = Html2mdMcpClient::Client.new(transport_with_start)
 
       allow(transport_with_start).to receive(:send_request)
         .and_return(jsonrpc_response(1, initialize_result))
@@ -135,8 +135,8 @@ RSpec.describe McpClient::Client do
     end
 
     it 'raises NotConnectedError when not connected' do
-      new_client = McpClient::Client.new(transport)
-      expect { new_client.list_tools }.to raise_error(McpClient::NotConnectedError)
+      new_client = Html2mdMcpClient::Client.new(transport)
+      expect { new_client.list_tools }.to raise_error(Html2mdMcpClient::NotConnectedError)
     end
   end
 
@@ -161,7 +161,7 @@ RSpec.describe McpClient::Client do
           'content' => [{ 'type' => 'text', 'text' => 'Something went wrong' }]
         }))
 
-      expect { client.call_tool('bad_tool') }.to raise_error(McpClient::ToolError, /Something went wrong/)
+      expect { client.call_tool('bad_tool') }.to raise_error(Html2mdMcpClient::ToolError, /Something went wrong/)
     end
 
     it 'returns empty array when no content' do
@@ -280,7 +280,7 @@ RSpec.describe McpClient::Client do
         .with(hash_including(method: 'tools/list'))
         .and_return(jsonrpc_error(2, -32601, 'Method not found'))
 
-      expect { client.list_tools }.to raise_error(McpClient::ProtocolError, /Method not found/)
+      expect { client.list_tools }.to raise_error(Html2mdMcpClient::ProtocolError, /Method not found/)
     end
 
     it 'raises ProtocolError on ID mismatch' do
@@ -288,7 +288,7 @@ RSpec.describe McpClient::Client do
         .with(hash_including(method: 'tools/list'))
         .and_return(jsonrpc_response(999, { 'tools' => [] }))
 
-      expect { client.list_tools }.to raise_error(McpClient::ProtocolError, /ID mismatch/)
+      expect { client.list_tools }.to raise_error(Html2mdMcpClient::ProtocolError, /ID mismatch/)
     end
   end
 end

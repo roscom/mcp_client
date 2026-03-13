@@ -1,4 +1,4 @@
-require 'mcp_client'
+require 'html2md_mcp_client'
 require 'webmock/rspec'
 
 WebMock.disable_net_connect!

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe McpClient::Transport::Stdio do
+RSpec.describe Html2mdMcpClient::Transport::Stdio do
   let(:transport) { described_class.new('echo', args: ['test']) }
 
   describe '#start' do
@@ -16,7 +16,7 @@ RSpec.describe McpClient::Transport::Stdio do
 
     it 'raises ConnectionError when command not found' do
       bad = described_class.new('nonexistent_command_xyz')
-      expect { bad.start }.to raise_error(McpClient::ConnectionError, /Cannot start/)
+      expect { bad.start }.to raise_error(Html2mdMcpClient::ConnectionError, /Cannot start/)
     end
   end
 
@@ -79,7 +79,7 @@ RSpec.describe McpClient::Transport::Stdio do
       transport.start
 
       expect { transport.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
-        .to raise_error(McpClient::ConnectionError, /terminated/)
+        .to raise_error(Html2mdMcpClient::ConnectionError, /terminated/)
     end
   end
 

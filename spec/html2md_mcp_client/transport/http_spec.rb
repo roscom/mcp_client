@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe McpClient::Transport::Http do
+RSpec.describe Html2mdMcpClient::Transport::Http do
   let(:url) { 'http://localhost:3001/mcp' }
   let(:transport) { described_class.new(url) }
 
@@ -71,21 +71,21 @@ RSpec.describe McpClient::Transport::Http do
       stub_request(:post, url).to_return(status: 500, body: 'Internal Server Error')
 
       expect { transport.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
-        .to raise_error(McpClient::ConnectionError, /HTTP 500/)
+        .to raise_error(Html2mdMcpClient::ConnectionError, /HTTP 500/)
     end
 
     it 'raises ConnectionError on connection refused' do
       stub_request(:post, url).to_raise(Errno::ECONNREFUSED)
 
       expect { transport.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
-        .to raise_error(McpClient::ConnectionError, /Cannot connect/)
+        .to raise_error(Html2mdMcpClient::ConnectionError, /Cannot connect/)
     end
 
     it 'raises ProtocolError on invalid JSON' do
       stub_request(:post, url).to_return(status: 200, body: 'not json')
 
       expect { transport.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
-        .to raise_error(McpClient::ProtocolError, /Invalid JSON/)
+        .to raise_error(Html2mdMcpClient::ProtocolError, /Invalid JSON/)
     end
   end
 
