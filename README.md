@@ -77,6 +77,25 @@ client.disconnect!
 
 This creates a fresh container per connection. The `--rm` flag ensures the container is cleaned up when the session ends. The `-i` flag keeps stdin open, which is required for stdio transport.
 
+#### With Playwright and Options
+
+Use `fetch_method: "playwright"` for JavaScript-rendered pages, and pass additional options like `wait_for`, `timeout`, and `include_images`:
+
+```ruby
+client = McpClient.stdio("docker", args: ["run", "--rm", "-i", "html2md", "python", "-m", "html2md.server"])
+client.connect!
+
+result = client.tool_text("html_to_markdown", {
+  url: "https://example.com",
+  fetch_method: "playwright",
+  wait_for: "load",
+  timeout: 60,
+  include_images: false
+})
+
+client.disconnect!
+```
+
 ### Custom Headers (HTTP)
 
 ```ruby
