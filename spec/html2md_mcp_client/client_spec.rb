@@ -171,6 +171,17 @@ RSpec.describe Html2mdMcpClient::Client do
 
       expect(client.call_tool('empty_tool')).to eq([])
     end
+
+    it 'raises ToolError when text content starts with Error even without isError flag' do
+      allow(transport).to receive(:send_request)
+        .with(hash_including(method: 'tools/call'))
+        .and_return(jsonrpc_response(2, {
+          'content' => [{ 'type' => 'text', 'text' => 'Error fetching URL: Connection error while fetching URL: https://bad.invalid' }]
+        }))
+
+      expect { client.call_tool('html_to_markdown', { url: 'https://bad.invalid' }) }
+        .to raise_error(Html2mdMcpClient::ToolError, /Error fetching URL/)
+    end
   end
 
   describe '#tool_text' do
@@ -188,6 +199,24 @@ RSpec.describe Html2mdMcpClient::Client do
         .and_return(jsonrpc_response(2, { 'content' => content }))
 
       expect(client.tool_text('my_tool')).to eq("Line 1\nLine 2")
+    end
+
+    it 'raises ToolError when no text content is returned' do
+      allow(transport).to receive(:send_request)
+        .with(hash_including(method: 'tools/call'))
+        .and_return(jsonrpc_response(2, {}))
+
+      expect { client.tool_text('bad_tool') }.to raise_error(Html2mdMcpClient::ToolError, /returned no text content/)
+    end
+
+    it 'raises ToolError when content has no text entries' do
+      content = [{ 'type' => 'image', 'data' => 'base64...' }]
+
+      allow(transport).to receive(:send_request)
+        .with(hash_including(method: 'tools/call'))
+        .and_return(jsonrpc_response(2, { 'content' => content }))
+
+      expect { client.tool_text('img_tool') }.to raise_error(Html2mdMcpClient::ToolError, /returned no text content/)
     end
   end
 

@@ -61,13 +61,15 @@ module Html2mdMcpClient
     end
 
     # Call a tool. Returns the content array.
-    # Raises ToolError if the server signals an error.
+    # Raises ToolError if the server signals an error or if text content
+    # begins with "Error" (some servers omit the isError flag).
     def call_tool(name, arguments = {})
       ensure_connected!
       result = request('tools/call', { name: name, arguments: arguments })
 
-      if result['isError']
-        texts = Array(result['content']).select { |c| c['type'] == 'text' }.map { |c| c['text'] }
+      texts = Array(result['content']).select { |c| c['type'] == 'text' }.map { |c| c['text'] }
+
+      if result['isError'] || texts.any? { |t| t.start_with?('Error') }
         raise ToolError, "Tool '#{name}' error: #{texts.join('; ')}"
       end
 
@@ -75,11 +77,15 @@ module Html2mdMcpClient
     end
 
     # Convenience: call a tool and return joined text content.
+    # Raises ToolError if no text content is returned.
     def tool_text(name, arguments = {})
-      call_tool(name, arguments)
+      texts = call_tool(name, arguments)
         .select { |c| c['type'] == 'text' }
         .map { |c| c['text'] }
-        .join("\n")
+
+      raise ToolError, "Tool '#{name}' returned no text content" if texts.empty?
+
+      texts.join("\n")
     end
 
     # Find a tool definition by name. Returns nil if not found.
