@@ -116,6 +116,16 @@ RSpec.describe Html2mdMcpClient::Transport::Http do
         .to raise_error(Html2mdMcpClient::ConnectionError, /Cannot connect/)
     end
 
+    it 'raises ConnectionError on unresolvable host' do
+      t = described_class.new('http://this-host-does-not-exist.invalid/mcp')
+
+      stub_request(:post, 'http://this-host-does-not-exist.invalid/mcp')
+        .to_raise(SocketError.new('getaddrinfo: Name or service not known'))
+
+      expect { t.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
+        .to raise_error(Html2mdMcpClient::ConnectionError, /Cannot connect/)
+    end
+
     it 'raises ProtocolError on invalid JSON' do
       stub_request(:post, url).to_return(status: 200, body: 'not json')
 
