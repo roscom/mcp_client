@@ -34,7 +34,9 @@ module Html2mdMcpClient
         end
 
         JSON.parse(body)
-      rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH, SocketError => e
+      rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Errno::ENETUNREACH,
+             Errno::ECONNRESET, Errno::ETIMEDOUT, Errno::EPIPE,
+             SocketError, Net::OpenTimeout, Net::ReadTimeout => e
         raise ConnectionError, "Cannot connect to #{@uri}: #{e.message}"
       rescue JSON::ParserError => e
         raise ProtocolError, "Invalid JSON response: #{e.message}"

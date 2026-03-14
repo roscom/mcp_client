@@ -81,6 +81,41 @@ RSpec.describe Html2mdMcpClient::Transport::Http do
         .to raise_error(Html2mdMcpClient::ConnectionError, /Cannot connect/)
     end
 
+    it 'raises ConnectionError on open timeout' do
+      stub_request(:post, url).to_raise(Net::OpenTimeout)
+
+      expect { transport.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
+        .to raise_error(Html2mdMcpClient::ConnectionError, /Cannot connect/)
+    end
+
+    it 'raises ConnectionError on read timeout' do
+      stub_request(:post, url).to_raise(Net::ReadTimeout)
+
+      expect { transport.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
+        .to raise_error(Html2mdMcpClient::ConnectionError, /Cannot connect/)
+    end
+
+    it 'raises ConnectionError on network unreachable' do
+      stub_request(:post, url).to_raise(Errno::ENETUNREACH)
+
+      expect { transport.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
+        .to raise_error(Html2mdMcpClient::ConnectionError, /Cannot connect/)
+    end
+
+    it 'raises ConnectionError on connection reset' do
+      stub_request(:post, url).to_raise(Errno::ECONNRESET)
+
+      expect { transport.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
+        .to raise_error(Html2mdMcpClient::ConnectionError, /Cannot connect/)
+    end
+
+    it 'raises ConnectionError on connection timed out' do
+      stub_request(:post, url).to_raise(Errno::ETIMEDOUT)
+
+      expect { transport.send_request({ jsonrpc: '2.0', id: 1, method: 'test', params: {} }) }
+        .to raise_error(Html2mdMcpClient::ConnectionError, /Cannot connect/)
+    end
+
     it 'raises ProtocolError on invalid JSON' do
       stub_request(:post, url).to_return(status: 200, body: 'not json')
 
