@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.name        = 'html2md_mcp_client'
   s.version     = Html2mdMcpClient::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ['Searchbird']
-  s.email       = ['dev@searchbird.io']
+  s.authors     = ['Roscommon']
+  s.email       = ['ross@roscommonhq.com']
   s.homepage    = 'https://github.com/roscom/html2md_mcp_client'
   s.summary     = 'Ruby client for the Model Context Protocol (MCP)'
   s.description = 'Connects to MCP servers over HTTP or stdio. Supports tools, resources, and prompts.'
