@@ -13,7 +13,7 @@ Requires Ruby 2.5+. No external dependencies.
 Add to your Gemfile:
 
 ```ruby
-gem 'html2md_mcp_client', github: 'roscom/html2md_mcp_client'
+gem 'html2md_mcp_client'
 ```
 
 Or from a local path:
