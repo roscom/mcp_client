@@ -1,6 +1,6 @@
 # Html2md MCP Client
 
-[![Gem Version](https://img.shields.io/gem/v/html2md_mcp_client)](https://rubygems.org/gems/html2md_mcp_client)
+[![Gem Version](https://img.shields.io/gem/v/html2md_mcp_client?color=green)](https://rubygems.org/gems/html2md_mcp_client)
 
 Ruby client for the [html2md-mcp](https://github.com/sunshad0w/html2md-mcp) server, built on the [Model Context Protocol](https://modelcontextprotocol.io) (MCP). Connects over HTTP or stdio and provides access to the server's HTML-to-Markdown conversion tools, resources, and prompts.
 
