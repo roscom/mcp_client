@@ -4,9 +4,9 @@
 
 Ruby client for the [html2md-mcp](https://github.com/sunshad0w/html2md-mcp) server, built on the [Model Context Protocol](https://modelcontextprotocol.io) (MCP). Connects over HTTP or stdio and provides access to the server's HTML-to-Markdown conversion tools, resources, and prompts.
 
-This gem assumes you have a working instance of the html2md-mcp server in place. See the [html2md-mcp repository](https://github.com/sunshad0w/html2md-mcp) for setup instructions.
+This gem assumes you have a working instance of the html2md-mcp server in place.
 
-Requires Ruby 2.5+. No external dependencies.
+Requires Ruby 2.6+. No external dependencies.
 
 ## Installation
 
